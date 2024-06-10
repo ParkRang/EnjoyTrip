@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.ssafy.project.wishlist.model.mapper.WishlistMapper">
+	<resultMap type="wishlistDto" id="wishlist">
+		<result column="id" property="id" />
+		<result column="user_id" property="user_id" />
+		<result column="attraction_info_content_id1" property="attraction_info_content_id1" />
+		<result column="attraction_info_content_id2" property="attraction_info_content_id2" />
+		<result column="attraction_info_content_id3" property="attraction_info_content_id3" />
+		<result column="attraction_info_content_id4" property="attraction_info_content_id4" />
+		<result column="attraction_info_content_id5" property="attraction_info_content_id5" />
+	</resultMap>
+
+	<resultMap type="wishlistImageDto" id="wishlistImage">
+		<result column="user_id" property="user_id" />
+		<result column="image1" property="image1" />
+		<result column="image2" property="image2" />
+		<result column="image3" property="image3" />
+		<result column="image4" property="image4" />
+		<result column="image5" property="image5" />
+	</resultMap>
+
+	<insert id="addWishlist" parameterType="wishlistDto">
+		insert into wishlist(user_id, attraction_info_content_id1, attraction_info_content_id2, attraction_info_content_id3,
+                             attraction_info_content_id4, attraction_info_content_id5) values(#{user_id},
+		#{attraction_info_content_id1}, #{attraction_info_content_id2}, #{attraction_info_content_id3},
+		#{attraction_info_content_id4}, #{attraction_info_content_id5})
+	</insert>
+	
+	<delete id="removeWishlist" parameterType="int">
+		delete from wishlist where id = #{id}
+	</delete>
+	
+	<select id="showWishlist" resultMap="wishlistImage">
+	SELECT
+            w.user_id,
+            a1.first_image AS image1,
+            a2.first_image AS image2,
+            a3.first_image AS image3,
+            a4.first_image AS image4,
+            a5.first_image AS image5
+        FROM
+            wishlist w
+        LEFT JOIN attraction_info a1 ON w.attraction_info_content_id1 = a1.content_id
+        LEFT JOIN attraction_info a2 ON w.attraction_info_content_id2 = a2.content_id
+        LEFT JOIN attraction_info a3 ON w.attraction_info_content_id3 = a3.content_id
+        LEFT JOIN attraction_info a4 ON w.attraction_info_content_id4 = a4.content_id
+        LEFT JOIN attraction_info a5 ON w.attraction_info_content_id5 = a5.content_id
+    </select>
+
+
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.ssafy.project.product.model.mapper.ProductMapper">
+	<resultMap type="productDto" id="product">
+		<result column="id" property="id" />
+		<result column="type" property="type" />
+		<result column="discount" property="discount" />
+		<result column="count_cost" property="count_cost" />
+	</resultMap>
+	
+<!-- 	<resultMap type="list" id="productList">
+		<collection property="products" ofType="productDto">
+			<result column="id" property="id" />
+			<result column="password" property="password" />
+			<result column="nickname" property="nickname" />
+			<result column="img" property="img" />
+			<result column="point" property="point" />
+			<result column="token" property="token" />
+			<result column="rule" property="rule" />
+		</collection>
+	</resultMap> -->
+	
+	<select id="listProduct" resultMap="product">
+		select id, type, discount, count_cost
+		from product
+	</select>
+	
+	<select id="productDetail" parameterType="int" resultMap="product">
+		select id, type, discount, count_cost
+		from product where id = #{product_id}
+	</select>
+	
+
+</mapper>

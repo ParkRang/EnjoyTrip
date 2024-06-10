@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.ssafy.project.visit.model.mapper.VisitMapper">
+	<resultMap type="visitDto" id="visit">
+		<result column="no" property="no" />
+		<result column="user_id" property="user_id" />
+		<result column="attraction_info_content_id" property="attraction_info_content_id" />
+		<result column="status" property="status" />
+	</resultMap>
+	<resultMap type="visitDtoWithTitle" id="visitTitle">
+		<result column="no" property="no" />
+		<result column="user_id" property="user_id" />
+		<result column="title" property="title" />
+		<result column="status" property="status" />
+	</resultMap>
+
+	<insert id="visitAuthentication" parameterType="visitDto">
+		insert into visit(user_id, attraction_info_content_id) values(#{user_id},
+		#{attraction_info_content_id})
+	</insert>
+	
+	<update id="visitChecked" parameterType="int">
+		update visit set status = 'accepted'
+		where no = #{no}
+	</update>
+	
+	<update id="visitRejected" parameterType="int">
+		update visit set status = 'rejected'
+		where no = #{no}
+	</update>
+
+	<select id="statusCheck" parameterType="map" resultType="int">
+		select count(*) from visit where user_id=#{id} and attraction_info_content_id = #{attr_id} and status!="rejected"
+	</select>
+
+	<update id="pointUp" parameterType="int" >
+      	<!-- update user u
+        set u.point = u.point + (
+            select a.point
+            from visit v
+            join attraction_info a on v.attraction_info_content_id = a.content_id
+            where v.user_id = u.id
+            and v.no = #{no}
+        ) -->
+        update user u
+        join(
+        	select v.user_id, a.point
+        	from visit v
+        	join attraction_info a on v.attraction_info_content_id = a.content_id
+        	where v.no = #{no}
+        ) as sub on u.id = sub.user_id
+        set u.point = u.point + sub.point;
+    </update>
+
+	<select id="showAllList" resultType="visitDtoWithTitle">
+	  select v.no, v.user_id, a.title as title, a.point, v.status 
+	  from visit v 
+	  join attraction_info a on v.attraction_info_content_id = a.content_id
+	</select>
+
+	<select id="showWaited" resultType="visitDtoWithTitle">
+		select v.no, v.user_id, a.title as title, a.point, v.status 
+	  from visit v 
+	  join attraction_info a on v.attraction_info_content_id = a.content_id
+		 where v.status="waited"
+	</select>
+</mapper>

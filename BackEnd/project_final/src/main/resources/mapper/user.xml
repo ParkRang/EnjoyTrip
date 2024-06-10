@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.ssafy.project.member.model.mapper.UserMapper">
+	<resultMap type="userDto" id="user">
+		<result column="id" property="id" />
+		<result column="password" property="password" />
+		<result column="nickname" property="nickname" />
+		<result column="img" property="img" />
+		<result column="point" property="point" />
+		<result column="token" property="token" />
+		<result column="rule" property="rule" />
+	</resultMap>
+	
+<!-- 	<resultMap type="list" id="productList">
+		<collection property="products" ofType="productDto">
+			<result column="id" property="id" />
+			<result column="password" property="password" />
+			<result column="nickname" property="nickname" />
+			<result column="img" property="img" />
+			<result column="point" property="point" />
+			<result column="token" property="token" />
+			<result column="rule" property="rule" />
+		</collection>
+	</resultMap> -->
+	
+	<select id="login" parameterType="map" resultMap="user">
+		select id, nickname, token
+		from user where id=#{id} and password=#{password}
+	</select>
+	
+	<select id="userInfo" parameterType="String" resultMap="user">
+		select id, nickname, img, point, role
+		from user where id = #{id}
+	</select>
+	
+	<update id="saveRefreshToken" parameterType="map">
+		update user
+		set token = #{token}
+		where id = #{id}
+	</update>
+	
+	<select id="getRefreshToken" parameterType="String" resultType="String">
+		select token from user where id = #{id}
+	</select>
+
+	<update id="deleteRefreshToken" parameterType="map">
+		update user
+		set token = #{token, jdbcType=VARCHAR}
+		where id = #{id}
+	</update>
+
+	<insert id ="join" parameterType="userDto">
+		insert into user 
+		values (#{id}, #{password}, #{nickname}, #{img}, #{point}, #{token}, #{role})
+	</insert>
+
+	<delete id = "userDelete" parameterType="String">
+		delete from user
+		where id = #{id}
+	</delete>
+	
+	<update id = "userFix" parameterType="userDto">
+		update user
+		set password=#{password}, nickname=#{nickname}, img=#{img}
+		where id = #{id}
+	</update>
+
+</mapper>

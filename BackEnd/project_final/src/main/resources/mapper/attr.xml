@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.project.attr.model.mapper.AttrMapper">
+	<resultMap type="attrDto" id="attr">
+		<result column="content_id" property="content_id"/>
+		<result column="content_type_id" property="content_type_id"/>
+		<result column="title" property="title"/>
+		<result column="addr1" property="addr1"/>
+		<result column="addr2" property="addr2"/>
+		<result column="zipcode" property="zipcode"/>
+		<result column="tel" property="tel"/>
+		<result column="first_image" property="first_image"/>
+		<result column="first_image2" property="first_image2"/>
+		<result column="readcount" property="readcount"/>
+		<result column="sido_code" property="sido_code"/>
+		<result column="gugun_code" property="gugun_code"/>
+		<result column="latitude" property="latitude"/>
+		<result column="longitude" property="longitude"/>
+		<result column="mlevel" property="mlevel"/>
+		<result column="point" property="point"/>
+		<result column="count" property="count"/>
+	</resultMap>
+
+	<resultMap type="attrListDto" id="attrList">
+		<collection property = "attrs" ofType="attrDto">
+			<result column="content_id" property="content_id"/>
+			<result column="content_type_id" property="content_type_id"/>
+			<result column="title" property="title"/>
+			<result column="addr1" property="addr1"/>
+			<result column="addr2" property="addr2"/>
+			<result column="zipcode" property="zipcode"/>
+			<result column="tel" property="tel"/>
+			<result column="first_image" property="first_image"/>
+			<result column="first_image2" property="first_image2"/>
+			<result column="readcount" property="readcount"/>
+			<result column="sido_code" property="sido_code"/>
+			<result column="gugun_code" property="gugun_code"/>
+			<result column="latitude" property="latitude"/>
+			<result column="longitude" property="longitude"/>
+			<result column="mlevel" property="mlevel"/>
+			<result column="point" property="point"/>
+			<result column="count" property="count"/>
+		</collection>
+	</resultMap>
+	<!-- <resultMap type = "">
+		
+	</resultMap> -->
+	
+	<select id="listAttr" resultMap="attr">
+		select * from attraction_info
+	</select>
+	
+	<select id="getAttr" parameterType="int" resultMap="attr">
+		select * from attraction_info
+		where content_id = #{content_id}
+	</select>
+	
+	<select id="listSearchAttr" parameterType="String" resultMap="attr">
+		select * from attraction_info
+		where title like concat('%', #{title},'%')
+	</select>
+	
+	<select id="getTotalAttrCount" parameterType="map" resultType="int">
+		select count(content_id) from attraction_info
+	</select>
+	
+	<insert id="registAttr" parameterType="attrDto">
+		insert into attraction_info values 
+		(#{content_id}, #{content_type_id}, #{title}, #{addr1}, #{addr2}, #{zipcode}, #{tel}, #{first_image}, #{first_image2}, #{readcount}, #{sido_code}, #{gugun_code}, #{latitude}, #{longitude}, #{mlevel}, #{point}, #{count} )
+	</insert>
+	
+</mapper>
